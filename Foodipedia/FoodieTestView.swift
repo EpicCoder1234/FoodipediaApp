@@ -1,18 +1,11 @@
 import SwiftUI
 
-struct FoodChoice: Codable, Identifiable, Hashable {
-    let id: Int
-    let title: String
-    let image: String
-    let cuisine: [String]
-}
-
 struct FoodieTestView: View {
     @State private var foodChoices: [FoodChoice] = []
     @State private var selectedFood: FoodChoice?
     @State private var wave = 1
     @State private var alertMessage = ""
-    
+
     var body: some View {
         ZStack {
             Image("food_background")
@@ -20,7 +13,7 @@ struct FoodieTestView: View {
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
                 .opacity(0.3)
-            
+
             VStack {
                 if wave == 15 {
                     Text("You have completed all waves!")
@@ -36,34 +29,31 @@ struct FoodieTestView: View {
                             .shadow(radius: 10)
                     }
                 } else if !foodChoices.isEmpty {
-                    VStack {
-                        ForEach(foodChoices.chunked(into: 4), id: \.self) { chunk in
-                            HStack {
-                                ForEach(chunk, id: \.self) { food in
-                                    VStack {
-                                        if let url = URL(string: food.image) {
-                                            AsyncImage(url: url) { image in
-                                                image.resizable()
-                                                     .aspectRatio(contentMode: .fill)
-                                                     .frame(width: 80, height: 80)
-                                                     .clipShape(RoundedRectangle(cornerRadius: 10))
-                                                     .shadow(radius: 5)
-                                                     .onTapGesture {
-                                                         self.selectedFood = food
-                                                         self.storeChoice(food: food)
-                                                     }
-                                            } placeholder: {
-                                                ProgressView()
-                                                    .frame(width: 80, height: 80)
-                                            }
-                                        }
-                                        Text(food.title)
-                                            .font(.caption)
-                                            .foregroundColor(.white)
+                    ScrollView {
+                        ForEach(foodChoices, id: \.id) { food in
+                            VStack {
+                                if let url = URL(string: food.image) {
+                                    AsyncImage(url: url) { image in
+                                        image.resizable()
+                                             .aspectRatio(contentMode: .fill)
+                                             .frame(width: 300, height: 300)
+                                             .clipShape(RoundedRectangle(cornerRadius: 10))
+                                             .shadow(radius: 5)
+                                             .onTapGesture {
+                                                 self.selectedFood = food
+                                                 self.storeChoice(food: food)
+                                             }
+                                    } placeholder: {
+                                        ProgressView()
+                                            .frame(width: 300, height: 300)
                                     }
-                                    .padding(.horizontal, 8)
                                 }
+                                Text(food.title)
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .padding(.top, 5)
                             }
+                            .padding(.vertical, 10)
                         }
                     }
                 } else {
@@ -71,17 +61,17 @@ struct FoodieTestView: View {
                         .foregroundColor(.white)
                 }
             }
-            .padding()
+            .padding(.horizontal, 16)
             .alert(isPresented: .constant(!alertMessage.isEmpty)) {
                 Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
         }
         .onAppear(perform: fetchFoodChoices)
     }
-    
+
     func fetchFoodChoices() {
         guard let url = URL(string: "https://foodipedia.onrender.com/random_food_choices?wave=\(wave)") else { return }
-        
+
         NetworkManager.shared.getRequest(url: url) { result in
             switch result {
                 case .success(let data):
@@ -102,15 +92,15 @@ struct FoodieTestView: View {
             }
         }
     }
-    
+
     func storeChoice(food: FoodChoice) {
         guard let url = URL(string: "https://foodipedia.onrender.com/store_choice") else { return }
-        
+
         let choice = ["selected_food": food]
-        
+
         do {
             let body = try JSONEncoder().encode(choice)
-            
+
             NetworkManager.shared.postRequest(url: url, body: body) { result in
                 switch result {
                     case .success:
@@ -132,17 +122,6 @@ struct FoodieTestView: View {
         } catch {
             self.alertMessage = "Error encoding choice."
         }
-    }
-}
-
-extension Collection {
-    func chunked(into size: Int) -> [[Element]] {
-        var chunks: [[Element]] = []
-        for index in stride(from: 0, to: self.count, by: size) {
-            let chunk = Array(self[index..<Swift.min(index + size, self.count)])
-            chunks.append(chunk)
-        }
-        return chunks
     }
 }
 

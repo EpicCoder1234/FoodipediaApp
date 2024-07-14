@@ -1,6 +1,6 @@
 import Foundation
 
-struct FoodChoice: Codable, Identifiable {
+struct FoodChoice: Codable, Identifiable, Hashable {
     let id: Int
     let title: String
     let image: String
