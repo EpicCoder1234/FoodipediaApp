@@ -1,2 +1,0 @@
-# FoodipediaApp
-Food app
