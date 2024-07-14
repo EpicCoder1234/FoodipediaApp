@@ -8,35 +8,50 @@ struct SignInView: View {
     @State private var navigateToTest = false
     
     var body: some View {
-        VStack {
-            TextField("Username", text: $username)
+        NavigationView {
+            ZStack {
+                Color.black
+                    .edgesIgnoringSafeArea(.all)
+                
+                Image("food_background")
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
+                    .opacity(0.2) // Adjust opacity for better visibility
+                
+                VStack {
+                    TextField("Username", text: $username)
+                        .padding()
+                        .background(Color.gray.opacity(0.2))
+                        .foregroundColor(.white)
+                        .cornerRadius(5.0)
+                        .padding(.bottom, 20)
+                    
+                    SecureField("Password", text: $password)
+                        .padding()
+                        .background(Color.gray.opacity(0.2))
+                        .foregroundColor(.white)
+                        .cornerRadius(5.0)
+                        .padding(.bottom, 20)
+                    
+                    Button(action: signIn) {
+                        Text("Sign In")
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(width: 200, height: 50)
+                            .background(Color.blue)
+                            .cornerRadius(10.0)
+                    }
+                    
+                    NavigationLink(destination: FoodieTestView(), isActive: $navigateToTest) {
+                        EmptyView()
+                    }
+                }
                 .padding()
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(5.0)
-                .padding(.bottom, 20)
-            
-            SecureField("Password", text: $password)
-                .padding()
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(5.0)
-                .padding(.bottom, 20)
-            
-            Button(action: signIn) {
-                Text("Sign In")
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(width: 200, height: 50)
-                    .background(Color.blue)
-                    .cornerRadius(10.0)
+                .alert(isPresented: $showAlert) {
+                    Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                }
             }
-            
-            NavigationLink(destination: FoodieTestView(), isActive: $navigateToTest) {
-                EmptyView()
-            }
-        }
-        .padding()
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
     }
     

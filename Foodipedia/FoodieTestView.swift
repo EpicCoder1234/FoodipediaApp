@@ -5,15 +5,17 @@ struct FoodieTestView: View {
     @State private var selectedFood: FoodChoice?
     @State private var wave = 1
     @State private var alertMessage = ""
-
+    
     var body: some View {
         ZStack {
+            Color.black
+                .edgesIgnoringSafeArea(.all)
             Image("food_background")
                 .resizable()
                 .scaledToFill()
                 .edgesIgnoringSafeArea(.all)
                 .opacity(0.3)
-
+            
             VStack {
                 if wave == 15 {
                     Text("You have completed all waves!")
@@ -30,30 +32,36 @@ struct FoodieTestView: View {
                     }
                 } else if !foodChoices.isEmpty {
                     ScrollView {
-                        ForEach(foodChoices, id: \.id) { food in
-                            VStack {
-                                if let url = URL(string: food.image) {
-                                    AsyncImage(url: url) { image in
-                                        image.resizable()
-                                             .aspectRatio(contentMode: .fill)
-                                             .frame(width: 300, height: 300)
-                                             .clipShape(RoundedRectangle(cornerRadius: 10))
-                                             .shadow(radius: 5)
-                                             .onTapGesture {
-                                                 self.selectedFood = food
-                                                 self.storeChoice(food: food)
-                                             }
-                                    } placeholder: {
-                                        ProgressView()
-                                            .frame(width: 300, height: 300)
+                        VStack(spacing: 20) {
+                            Text("Food Personality Test")
+                                .font(.largeTitle)
+                                .foregroundColor(.white)
+                                .padding()
+                            ForEach(foodChoices, id: \.self) { food in
+                                VStack {
+                                    if let url = URL(string: food.image) {
+                                        AsyncImage(url: url) { image in
+                                            image.resizable()
+                                                 .aspectRatio(contentMode: .fill)
+                                                 .frame(width: UIScreen.main.bounds.width * 0.5, height: UIScreen.main.bounds.width * 0.3)
+                                                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                 .shadow(radius: 5)
+                                                 .onTapGesture {
+                                                     self.selectedFood = food
+                                                     self.storeChoice(food: food)
+                                                 }
+                                        } placeholder: {
+                                            ProgressView()
+                                                .frame(width: UIScreen.main.bounds.width * 0.8, height: UIScreen.main.bounds.width * 0.6)
+                                        }
                                     }
+                                    Text(food.title)
+                                        .font(.caption)
+                                        .foregroundColor(.white)
+                                        .padding(.top, 5)
                                 }
-                                Text(food.title)
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                                    .padding(.top, 5)
+                                .padding(.horizontal, 8)
                             }
-                            .padding(.vertical, 10)
                         }
                     }
                 } else {
@@ -61,17 +69,17 @@ struct FoodieTestView: View {
                         .foregroundColor(.white)
                 }
             }
-            .padding(.horizontal, 16)
+            .padding()
             .alert(isPresented: .constant(!alertMessage.isEmpty)) {
                 Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             }
         }
         .onAppear(perform: fetchFoodChoices)
     }
-
+    
     func fetchFoodChoices() {
         guard let url = URL(string: "https://foodipedia.onrender.com/random_food_choices?wave=\(wave)") else { return }
-
+        
         NetworkManager.shared.getRequest(url: url) { result in
             switch result {
                 case .success(let data):
@@ -92,15 +100,15 @@ struct FoodieTestView: View {
             }
         }
     }
-
+    
     func storeChoice(food: FoodChoice) {
         guard let url = URL(string: "https://foodipedia.onrender.com/store_choice") else { return }
-
+        
         let choice = ["selected_food": food]
-
+        
         do {
             let body = try JSONEncoder().encode(choice)
-
+            
             NetworkManager.shared.postRequest(url: url, body: body) { result in
                 switch result {
                     case .success:
