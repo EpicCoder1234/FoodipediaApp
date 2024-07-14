@@ -20,3 +20,8 @@ struct FoodieTestResponse: Codable {
     let wave: Int
     let choices: [FoodChoice]
 }
+
+struct Ingredient: Codable, Identifiable {
+    let id: Int
+    let name: String
+}

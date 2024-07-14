@@ -41,7 +41,7 @@ struct SignInView: View {
     }
     
     func signIn() {
-        guard let url = URL(string: "http://127.0.0.1:5000/signin") else { return }
+        guard let url = URL(string: "https://foodipedia.onrender.com/signin") else { return }
         
         let credentials = ["username": username, "password": password]
         
@@ -51,13 +51,13 @@ struct SignInView: View {
             NetworkManager.shared.postRequest(url: url, body: body) { result in
                 switch result {
                 case .success(let data):
-                    do {
-                        let response = try JSONDecoder().decode(SignInResponse.self, from: data)
-                        UserDefaults.standard.set(response.accessToken, forKey: "accessToken")
+                    switch NetworkManager.shared.decodeResponse(SignInResponse.self, from: data) {
+                    case .success(let response):
+                        UserDefaults.standard.set(response.access_token, forKey: "access_token")
                         DispatchQueue.main.async {
                             self.navigateToTest = true
                         }
-                    } catch {
+                    case .failure:
                         DispatchQueue.main.async {
                             self.alertMessage = "Error decoding response."
                             self.showAlert = true
@@ -78,9 +78,12 @@ struct SignInView: View {
 }
 
 struct SignInResponse: Codable {
-    let accessToken: String
+    let access_token: String
+    
+    enum CodingKeys: String, CodingKey {
+        case access_token = "access_token"
+    }
 }
-
 
 struct SignInView_Previews: PreviewProvider {
     static var previews: some View {

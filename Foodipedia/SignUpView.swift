@@ -5,38 +5,71 @@ struct SignUpView: View {
     @State private var password: String = ""
     @State private var showAlert = false
     @State private var alertMessage = ""
+    @State private var successMessage = ""
     
     var body: some View {
-        VStack {
-            TextField("Username", text: $username)
-                .padding()
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(5.0)
-                .padding(.bottom, 20)
-            
-            SecureField("Password", text: $password)
-                .padding()
-                .background(Color.gray.opacity(0.2))
-                .cornerRadius(5.0)
-                .padding(.bottom, 20)
-            
-            Button(action: signUp) {
-                Text("Sign Up")
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(width: 200, height: 50)
-                    .background(Color.green)
-                    .cornerRadius(10.0)
+        ZStack {
+            Color.black
+                .edgesIgnoringSafeArea(.all)
+            VStack {
+                    Text("Sign Up")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .padding(.bottom, 40)
+                    
+                    
+                
+                if successMessage.isEmpty {
+                    TextField("Username", text: $username)
+                        .padding()
+                        .background(Color.gray.opacity(0.2))
+                        .foregroundColor(.white)
+                        .cornerRadius(5.0)
+                        .padding(.bottom, 20)
+                    
+                    SecureField("Password", text: $password)
+                        .padding()
+                        .background(Color.gray.opacity(0.2))
+                        .foregroundColor(.white)
+                        .cornerRadius(5.0)
+                        .padding(.bottom, 20)
+                       
+                    
+                    Button(action: signUp) {
+                        Text("Sign Up")
+                            .foregroundColor(.black)
+                            .padding()
+                            .frame(width: 200, height: 50)
+                            .background(Color.white)
+                            .cornerRadius(10.0)
+                            .shadow(radius: 10)
+                    }
+                } else {
+                    Text(successMessage)
+                        .foregroundColor(.white)
+                        .padding()
+                    
+                    NavigationLink(destination: SignInView()) {
+                        Text("Go to Sign In")
+                            .foregroundColor(.black)
+                            .padding()
+                            .frame(width: 200, height: 50)
+                            .background(Color.white)
+                            .cornerRadius(10.0)
+                            .shadow(radius: 10)
+                    }
+                }
             }
-        }
-        .padding()
-        .alert(isPresented: $showAlert) {
-            Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            .padding()
+            .alert(isPresented: $showAlert) {
+                Alert(title: Text("Error"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            }
         }
     }
     
     func signUp() {
-        guard let url = URL(string: "http://127.0.0.1:5000/signup") else { return }
+        guard let url = URL(string: "https://foodipedia.onrender.com/signup") else { return }
         
         let credentials = ["username": username, "password": password]
         
@@ -45,10 +78,16 @@ struct SignUpView: View {
             
             NetworkManager.shared.postRequest(url: url, body: body) { result in
                 switch result {
-                case .success:
-                    DispatchQueue.main.async {
-                        self.alertMessage = "User registered successfully."
-                        self.showAlert = true
+                case .success(let data):
+                    if let response = String(data: data, encoding: .utf8), response.contains("User already exists") {
+                        DispatchQueue.main.async {
+                            self.alertMessage = "User already exists."
+                            self.showAlert = true
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.successMessage = "User registered successfully."
+                        }
                     }
                 case .failure(let error):
                     DispatchQueue.main.async {
@@ -67,5 +106,14 @@ struct SignUpView: View {
 struct SignUpView_Previews: PreviewProvider {
     static var previews: some View {
         SignUpView()
+    }
+}
+
+extension View {
+    func placeholder<Content: View>(when shouldShow: Bool, alignment: Alignment = .leading, @ViewBuilder placeholder: () -> Content) -> some View {
+        ZStack(alignment: alignment) {
+            placeholder().opacity(shouldShow ? 1 : 0)
+            self
+        }
     }
 }

@@ -19,6 +19,8 @@
 		3882DDD42C3DE2FB00E1D04B /* FoodieModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3882DDD32C3DE2FB00E1D04B /* FoodieModels.swift */; };
 		3882DDD62C3DE35000E1D04B /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3882DDD52C3DE35000E1D04B /* NetworkManager.swift */; };
 		3882DDD82C3DE73100E1D04B /* FoodieTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3882DDD72C3DE73100E1D04B /* FoodieTestView.swift */; };
+		3882DDDB2C423CEE00E1D04B /* IngredientSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3882DDDA2C423CEE00E1D04B /* IngredientSelectionView.swift */; };
+		3882DDDD2C423D1D00E1D04B /* IngredientViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3882DDDC2C423D1D00E1D04B /* IngredientViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,8 @@
 		3882DDD32C3DE2FB00E1D04B /* FoodieModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodieModels.swift; sourceTree = "<group>"; };
 		3882DDD52C3DE35000E1D04B /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		3882DDD72C3DE73100E1D04B /* FoodieTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodieTestView.swift; sourceTree = "<group>"; };
+		3882DDDA2C423CEE00E1D04B /* IngredientSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientSelectionView.swift; sourceTree = "<group>"; };
+		3882DDDC2C423D1D00E1D04B /* IngredientViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +83,8 @@
 				3882DDCC2C3B8E1900E1D04B /* SignUpView.swift */,
 				3882DDCE2C3B8E8300E1D04B /* SignInView.swift */,
 				3882DDD72C3DE73100E1D04B /* FoodieTestView.swift */,
+				3882DDDA2C423CEE00E1D04B /* IngredientSelectionView.swift */,
+				3882DDDC2C423D1D00E1D04B /* IngredientViewModel.swift */,
 			);
 			path = Foodipedia;
 			sourceTree = "<group>";
@@ -136,6 +142,7 @@
 			);
 			mainGroup = 3882DDAA2C3B8B9A00E1D04B;
 			packageReferences = (
+				3882DDD92C3F73AC00E1D04B /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 3882DDB42C3B8B9A00E1D04B /* Products */;
 			projectDirPath = "";
@@ -165,12 +172,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				3882DDB92C3B8B9A00E1D04B /* ContentView.swift in Sources */,
+				3882DDDB2C423CEE00E1D04B /* IngredientSelectionView.swift in Sources */,
 				3882DDD12C3CDB8A00E1D04B /* MainView.swift in Sources */,
 				3882DDD62C3DE35000E1D04B /* NetworkManager.swift in Sources */,
 				3882DDD82C3DE73100E1D04B /* FoodieTestView.swift in Sources */,
 				3882DDCD2C3B8E1900E1D04B /* SignUpView.swift in Sources */,
 				3882DDD42C3DE2FB00E1D04B /* FoodieModels.swift in Sources */,
 				3882DDBB2C3B8B9A00E1D04B /* Item.swift in Sources */,
+				3882DDDD2C423D1D00E1D04B /* IngredientViewModel.swift in Sources */,
 				3882DDB72C3B8B9A00E1D04B /* FoodipediaApp.swift in Sources */,
 				3882DDCF2C3B8E8300E1D04B /* SignInView.swift in Sources */,
 			);
@@ -376,6 +385,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3882DDD92C3F73AC00E1D04B /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 3882DDAB2C3B8B9A00E1D04B /* Project object */;
 }
