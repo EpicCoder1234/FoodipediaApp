@@ -12,7 +12,6 @@
 		3882DDBB2C3B8B9A00E1D04B /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3882DDBA2C3B8B9A00E1D04B /* Item.swift */; };
 		3882DDBD2C3B8B9C00E1D04B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3882DDBC2C3B8B9C00E1D04B /* Assets.xcassets */; };
 		3882DDC02C3B8B9C00E1D04B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3882DDBF2C3B8B9C00E1D04B /* Preview Assets.xcassets */; };
-		3882DDC72C3B8BB600E1D04B /* app.py in Resources */ = {isa = PBXBuildFile; fileRef = 3882DDC62C3B8BB600E1D04B /* app.py */; };
 		3882DDCD2C3B8E1900E1D04B /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3882DDCC2C3B8E1900E1D04B /* SignUpView.swift */; };
 		3882DDCF2C3B8E8300E1D04B /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3882DDCE2C3B8E8300E1D04B /* SignInView.swift */; };
 		3882DDD12C3CDB8A00E1D04B /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3882DDD02C3CDB8A00E1D04B /* MainView.swift */; };
@@ -30,7 +29,6 @@
 		3882DDBA2C3B8B9A00E1D04B /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		3882DDBC2C3B8B9C00E1D04B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3882DDBF2C3B8B9C00E1D04B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		3882DDC62C3B8BB600E1D04B /* app.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = app.py; path = "../../../Downloads/Foodipedia-main/app.py"; sourceTree = "<group>"; };
 		3882DDCC2C3B8E1900E1D04B /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		3882DDCE2C3B8E8300E1D04B /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		3882DDD02C3CDB8A00E1D04B /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -76,7 +74,6 @@
 				3882DDD52C3DE35000E1D04B /* NetworkManager.swift */,
 				3882DDD02C3CDB8A00E1D04B /* MainView.swift */,
 				3882DDB82C3B8B9A00E1D04B /* ContentView.swift */,
-				3882DDC62C3B8BB600E1D04B /* app.py */,
 				3882DDBA2C3B8B9A00E1D04B /* Item.swift */,
 				3882DDBC2C3B8B9C00E1D04B /* Assets.xcassets */,
 				3882DDBE2C3B8B9C00E1D04B /* Preview Content */,
@@ -158,7 +155,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3882DDC72C3B8BB600E1D04B /* app.py in Resources */,
 				3882DDC02C3B8B9C00E1D04B /* Preview Assets.xcassets in Resources */,
 				3882DDBD2C3B8B9C00E1D04B /* Assets.xcassets in Resources */,
 			);
