@@ -1,9 +1,29 @@
 import Foundation
+// Define your models if they are not already defined
+struct Ingredient: Identifiable, Decodable, Hashable {
+    // Define the properties according to your JSON structure
+    let id: UUID
+    let name: String
+}
 
-class NetworkManager {
+struct Recipe: Identifiable, Decodable {
+    let id: UUID
+    let title: String
+    let image: String
+    let ingredients: String
+    let nutrition: String
+    let time: Int
+    let instructions: String
+}
+
+class NetworkManager: ObservableObject {
     static let shared = NetworkManager()
     
-    private init() {}
+    @Published var ingredients: [String: [Ingredient]] = [:]
+    @Published var selectedIngredients: Set<String> = []
+    @Published var recipes = [Recipe]()
+
+    init() {}
     
     func makeRequest(url: URL, method: String, body: Data? = nil, completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
         var request = URLRequest(url: url)
@@ -70,18 +90,42 @@ class NetworkManager {
         }
     }
     
-    func fetchRecipes(ingredients: [String], completion: @escaping (Result<[Recipe], Error>) -> Void) {
+    func fetchRecipes(ingredients: String) {
         guard let url = URL(string: "https://foodipedia.onrender.com/get_recipes") else { return }
-        let body: [String: Any] = ["ingredients": ingredients]
-        let jsonData = try? JSONSerialization.data(withJSONObject: body)
-        
-        postRequest(url: url, body: jsonData!) { result in
-            switch result {
-            case .success(let data):
-                completion(self.decodeResponse([Recipe].self, from: data))
-            case .failure(let error):
-                completion(.failure(error))
-            }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        // Retrieve the token from UserDefaults or your token storage mechanism
+        if let token = UserDefaults.standard.string(forKey: "access_token") {
+            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        } else {
+            print("No token found")
+            return
         }
+
+        let parameters: [String: Any] = ["ingredients": ingredients]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: parameters)
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else { return }
+            
+            // Check for 401 Unauthorized status code
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 401 {
+                DispatchQueue.main.async {
+                    print("Unauthorized: Invalid or missing token")
+                    // Handle the unauthorized case, e.g., prompt for login or refresh token
+                }
+                return
+            }
+            
+            if let response = try? JSONDecoder().decode([Recipe].self, from: data) {
+                DispatchQueue.main.async {
+                    self.recipes = response
+                }
+            }
+        }.resume()
     }
+
 }

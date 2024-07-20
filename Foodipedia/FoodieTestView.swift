@@ -5,6 +5,7 @@ struct FoodieTestView: View {
     @State private var selectedFood: FoodChoice?
     @State private var wave = 1
     @State private var alertMessage = ""
+    @State private var hasPreferences = false
     
     var body: some View {
         ZStack {
@@ -17,7 +18,11 @@ struct FoodieTestView: View {
                 .opacity(0.3)
             
             VStack {
-                if wave == 15 {
+                if hasPreferences {
+                    NavigationLink(destination: IngredientSelectionView(), isActive: $hasPreferences) {
+                        EmptyView()
+                    }
+                } else if wave == 15 {
                     Text("You have completed all waves!")
                         .font(.largeTitle)
                         .foregroundColor(.white)
@@ -82,25 +87,30 @@ struct FoodieTestView: View {
         
         NetworkManager.shared.getRequest(url: url) { result in
             switch result {
-                case .success(let data):
-                    do {
-                        let response = try JSONDecoder().decode(FoodieTestResponse.self, from: data)
-                        DispatchQueue.main.async {
+            case .success(let data):
+                do {
+                    let response = try JSONDecoder().decode(FoodieTestResponse.self, from: data)
+                    DispatchQueue.main.async {
+                        if response.message == "User already has preferences" {
+                            self.hasPreferences = true
+                        } else {
                             self.foodChoices = response.choices
                         }
-                    } catch {
-                        DispatchQueue.main.async {
-                            self.alertMessage = "Error decoding response."
-                        }
                     }
-                case .failure(let error):
+                } catch {
                     DispatchQueue.main.async {
-                        self.alertMessage = error.localizedDescription
+                        self.alertMessage = "Error decoding response."
                     }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.alertMessage = error.localizedDescription
+                }
             }
         }
     }
     
+
     func storeChoice(food: FoodChoice) {
         guard let url = URL(string: "https://foodipedia.onrender.com/store_choice") else { return }
         
@@ -111,20 +121,20 @@ struct FoodieTestView: View {
             
             NetworkManager.shared.postRequest(url: url, body: body) { result in
                 switch result {
-                    case .success:
-                        DispatchQueue.main.async {
-                            if self.wave < 15 {
-                                self.wave += 1
-                                self.fetchFoodChoices()
-                            } else {
-                                self.foodChoices = []
-                            }
+                case .success:
+                    DispatchQueue.main.async {
+                        if self.wave < 15 {
+                            self.wave += 1
+                            self.fetchFoodChoices()
+                        } else {
+                            self.foodChoices = []
                         }
+                    }
 
-                    case .failure(let error):
-                        DispatchQueue.main.async {
-                            self.alertMessage = error.localizedDescription
-                        }
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        self.alertMessage = error.localizedDescription
+                    }
                 }
             }
         } catch {

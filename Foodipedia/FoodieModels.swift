@@ -14,14 +14,13 @@ struct UserChoice: Codable {
     let food_title: String
     let food_image: String
     let cuisine: [String]
+    let wave_number: Int
 }
 
 struct FoodieTestResponse: Codable {
     let wave: Int
+    let message: String?
     let choices: [FoodChoice]
 }
 
-struct Ingredient: Codable, Identifiable {
-    let id: Int
-    let name: String
-}
+
